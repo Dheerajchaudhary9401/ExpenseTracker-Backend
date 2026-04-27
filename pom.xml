@@ -23,16 +23,9 @@
 
     <modules>
         <module>auth-service</module>
-        <!-- We will uncomment these one by one as we build them
+
         <module>category-service</module>
-        <module>expense-service</module>
-        <module>income-service</module>
-        <module>budget-service</module>
-        <module>analytics-service</module>
-        <module>recurring-service</module>
-        <module>notification-service</module>
-        <module>spendsmart-web</module>
-        -->
+
     </modules>
 
     <properties>
