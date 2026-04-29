@@ -23,9 +23,9 @@
 
     <modules>
         <module>auth-service</module>
-
         <module>category-service</module>
         <module>expense-service</module>
+        <module>income-service</module>
     </modules>
 
     <properties>
