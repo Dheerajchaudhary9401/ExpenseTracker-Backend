@@ -27,6 +27,7 @@
         <module>expense-service</module>
         <module>income-service</module>
         <module>budget-recurring-service</module>
+        <module>analytics-service</module>
     </modules>
 
     <properties>
