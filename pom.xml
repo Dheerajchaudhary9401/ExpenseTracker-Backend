@@ -22,6 +22,7 @@
     <description>SpendSmart Expense Tracker - Multi Module Project</description>
 
     <modules>
+        <module>api-gateway</module>
         <module>auth-service</module>
         <module>category-service</module>
         <module>expense-service</module>
