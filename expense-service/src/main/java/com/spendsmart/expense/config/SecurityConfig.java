@@ -5,6 +5,7 @@ import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
+import io.swagger.v3.oas.models.servers.Server;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,7 +21,6 @@ import org.springframework.web.cors.CorsConfigurationSource;
 public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
-
     private final CorsConfigurationSource corsConfigurationSource;
 
     @Bean
@@ -44,13 +44,22 @@ public class SecurityConfig {
 
     @Bean
     public OpenAPI customOpenAPI() {
-        String name = "expense";
-        String title = name.substring(0, 1).toUpperCase() + name.substring(1) + " Service API";
         return new OpenAPI()
-                .info(new Info().title(title).version("1.0.0"))
-                .addSecurityItem(new SecurityRequirement().addList("Bearer Authentication"))
-                .components(new Components().addSecuritySchemes("Bearer Authentication",
-                        new SecurityScheme().type(SecurityScheme.Type.HTTP)
-                                .scheme("bearer").bearerFormat("JWT")));
+                
+                .addServersItem(new Server()
+                        .url("http://localhost:8080")
+                        .description("API Gateway"))
+                .info(new Info()
+                        .title("SpendSmart Expense Service API")
+                        .version("1.0.0"))
+                .addSecurityItem(new SecurityRequirement()
+                        .addList("Bearer Authentication"))
+                .components(new Components()
+                        .addSecuritySchemes("Bearer Authentication",
+                                new SecurityScheme()
+                                        .type(SecurityScheme.Type.HTTP)
+                                        .scheme("bearer")
+                                        .bearerFormat("JWT")
+                                        .description("Enter your JWT token here")));
     }
 }
