@@ -45,7 +45,7 @@ public class SecurityConfig {
     @Bean
     public OpenAPI customOpenAPI() {
         return new OpenAPI()
-                
+
                 .addServersItem(new Server()
                         .url("http://localhost:8080")
                         .description("API Gateway"))
