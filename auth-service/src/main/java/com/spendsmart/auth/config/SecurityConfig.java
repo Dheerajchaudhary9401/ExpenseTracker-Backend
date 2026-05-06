@@ -70,6 +70,10 @@ public class SecurityConfig {
     @Bean
     public OpenAPI customOpenAPI() {
         return new OpenAPI()
+                
+                .addServersItem(new io.swagger.v3.oas.models.servers.Server()
+                        .url("http://localhost:8080")
+                        .description("API Gateway"))
                 .info(new Info()
                         .title("SpendSmart Auth Service API")
                         .version("1.0.0")
