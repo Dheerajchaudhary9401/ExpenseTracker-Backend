@@ -28,85 +28,66 @@ public class GatewayConfig {
 
                 .route("auth-service-docs", r -> r
                         .path("/v3/api-docs/auth-service")
-                        .filters(f -> f.rewritePath(
-                                "/v3/api-docs/auth-service",
-                                "/v3/api-docs"))
+                        .filters(f -> f.rewritePath("/v3/api-docs/auth-service", "/v3/api-docs"))
                         .uri("http://localhost:8081"))
 
                 .route("category-service-docs", r -> r
                         .path("/v3/api-docs/category-service")
-                        .filters(f -> f.rewritePath(
-                                "/v3/api-docs/category-service",
-                                "/v3/api-docs"))
+                        .filters(f -> f.rewritePath("/v3/api-docs/category-service", "/v3/api-docs"))
                         .uri("http://localhost:8082"))
 
                 .route("expense-service-docs", r -> r
                         .path("/v3/api-docs/expense-service")
-                        .filters(f -> f.rewritePath(
-                                "/v3/api-docs/expense-service",
-                                "/v3/api-docs"))
+                        .filters(f -> f.rewritePath("/v3/api-docs/expense-service", "/v3/api-docs"))
                         .uri("http://localhost:8083"))
 
                 .route("income-service-docs", r -> r
                         .path("/v3/api-docs/income-service")
-                        .filters(f -> f.rewritePath(
-                                "/v3/api-docs/income-service",
-                                "/v3/api-docs"))
+                        .filters(f -> f.rewritePath("/v3/api-docs/income-service", "/v3/api-docs"))
                         .uri("http://localhost:8084"))
 
                 .route("budget-service-docs", r -> r
                         .path("/v3/api-docs/budget-service")
-                        .filters(f -> f.rewritePath(
-                                "/v3/api-docs/budget-service",
-                                "/v3/api-docs"))
+                        .filters(f -> f.rewritePath("/v3/api-docs/budget-service", "/v3/api-docs"))
                         .uri("http://localhost:8085"))
 
                 .route("analytics-service-docs", r -> r
                         .path("/v3/api-docs/analytics-service")
-                        .filters(f -> f.rewritePath(
-                                "/v3/api-docs/analytics-service",
-                                "/v3/api-docs"))
+                        .filters(f -> f.rewritePath("/v3/api-docs/analytics-service", "/v3/api-docs"))
                         .uri("http://localhost:8086"))
 
                 .route("auth-public", r -> r
-                        .path("/auth/register", "/auth/login",
-                                "/auth/refresh",  "/auth/validate")
+                        .path("/auth/register", "/auth/login", "/auth/refresh", "/auth/validate")
                         .uri("http://localhost:8081"))
 
                 .route("auth-protected", r -> r
                         .path("/auth/**")
-                        .filters(f -> f.filter(jwtAuthenticationFilter.apply(
-                                new JwtAuthenticationFilter.Config())))
+                        .filters(f -> f.filter(jwtAuthenticationFilter.apply(new JwtAuthenticationFilter.Config())))
                         .uri("http://localhost:8081"))
 
                 .route("category-service", r -> r
                         .path("/category/**")
-                        .filters(f -> f.filter(jwtAuthenticationFilter.apply(
-                                new JwtAuthenticationFilter.Config())))
+                        .filters(f -> f.filter(jwtAuthenticationFilter.apply(new JwtAuthenticationFilter.Config())))
                         .uri("http://localhost:8082"))
 
                 .route("expense-service", r -> r
                         .path("/expense/**")
-                        .filters(f -> f.filter(jwtAuthenticationFilter.apply(
-                                new JwtAuthenticationFilter.Config())))
+                        .filters(f -> f.filter(jwtAuthenticationFilter.apply(new JwtAuthenticationFilter.Config())))
                         .uri("http://localhost:8083"))
 
                 .route("income-service", r -> r
                         .path("/income/**")
-                        .filters(f -> f.filter(jwtAuthenticationFilter.apply(
-                                new JwtAuthenticationFilter.Config())))
+                        .filters(f -> f.filter(jwtAuthenticationFilter.apply(new JwtAuthenticationFilter.Config())))
                         .uri("http://localhost:8084"))
 
                 .route("budget-service", r -> r
                         .path("/budget/**", "/recurring/**")
-                        .filters(f -> f.filter(jwtAuthenticationFilter.apply(
-                                new JwtAuthenticationFilter.Config())))
+                        .filters(f -> f.filter(jwtAuthenticationFilter.apply(new JwtAuthenticationFilter.Config())))
                         .uri("http://localhost:8085"))
 
                 .route("analytics-service", r -> r
                         .path("/analytics/**")
-                        .filters(f -> f.filter(jwtAuthenticationFilter.apply(
-                                new JwtAuthenticationFilter.Config())))
+                        .filters(f -> f.filter(jwtAuthenticationFilter.apply(new JwtAuthenticationFilter.Config())))
                         .uri("http://localhost:8086"))
 
                 .build();
@@ -119,26 +100,28 @@ public class GatewayConfig {
                 .formLogin(ServerHttpSecurity.FormLoginSpec::disable)
                 .httpBasic(ServerHttpSecurity.HttpBasicSpec::disable)
                 .authorizeExchange(exchange -> exchange
-                        .anyExchange().permitAll() // JWT filter handles auth
+                        // Swagger resources — always public
+                        .pathMatchers(
+                                "/swagger-ui.html",
+                                "/swagger-ui/**",
+                                "/v3/api-docs/**",
+                                "/webjars/**"
+                        ).permitAll()
+                        .anyExchange().permitAll()
                 )
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .build();
     }
 
-
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
 
-        config.setAllowedOrigins(List.of(
-                "http://localhost:4200"    // Angular dev server
-        ));
-
-        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-
+        config.setAllowedOriginPatterns(List.of("*"));
+        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
         config.setAllowedHeaders(List.of("*"));
-
         config.setAllowCredentials(true);
+        config.setMaxAge(3600L);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);
