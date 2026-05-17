@@ -17,6 +17,11 @@ public class NotificationResource {
 
     private final NotificationService notificationService;
 
+    @GetMapping("/all")
+    public ResponseEntity<List<Notification>> getAll() {
+        return ResponseEntity.ok(notificationService.getAll());
+    }
+
     @PostMapping("/user/{userId}")
     public ResponseEntity<Notification> sendNotification(
             @PathVariable int userId,

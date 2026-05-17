@@ -8,6 +8,7 @@ import java.util.List;
 
 public interface NotificationService {
 
+    List<Notification> getAll();
     Notification send(int recipientId, NotificationRequest request);
 
     void sendBudgetAlert(Budget budget);

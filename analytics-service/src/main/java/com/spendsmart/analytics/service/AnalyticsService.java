@@ -28,5 +28,5 @@ public interface AnalyticsService {
 
     byte[] generateMonthlyReportPDF(int userId, int year, int month);
 
-    void sendMonthlySummaryEmail(int userId, int year, int month);
+    void sendMonthlySummaryEmail(int userId, String email, int year, int month);
 }

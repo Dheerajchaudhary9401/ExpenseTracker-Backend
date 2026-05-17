@@ -23,6 +23,11 @@ public class NotificationServiceImpl implements NotificationService {
     private final JavaMailSender mailSender;
 
     @Override
+    public List<Notification> getAll() {
+        return notificationRepository.findAll();
+    }
+
+    @Override
     public Notification send(int recipientId, NotificationRequest request) {
         Notification notification = Notification.builder()
                 .recipientId(recipientId)

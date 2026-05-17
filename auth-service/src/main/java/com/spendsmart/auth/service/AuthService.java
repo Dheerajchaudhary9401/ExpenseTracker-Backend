@@ -28,4 +28,8 @@ public interface AuthService {
     void updateMonthlyBudget(int userId, double budget);
 
     void deactivateAccount(int userId);
+
+    void deleteUser(int userId);
+
+
 }

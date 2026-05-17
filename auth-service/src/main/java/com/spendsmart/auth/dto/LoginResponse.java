@@ -6,11 +6,11 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class LoginResponse {
-
     private String token;
     private String tokenType = "Bearer";
     private int userId;
     private String fullName;
     private String email;
     private String currency;
+    private String role;
 }

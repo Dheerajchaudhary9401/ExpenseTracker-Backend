@@ -122,8 +122,9 @@ public class AnalyticsResource {
     public ResponseEntity<String> sendMonthlySummary(
             @PathVariable int userId,
             @PathVariable int year,
-            @PathVariable int month) {
-        analyticsService.sendMonthlySummaryEmail(userId, year, month);
+            @PathVariable int month,
+            @RequestParam String email) {
+        analyticsService.sendMonthlySummaryEmail(userId, email, year, month); //added email here
         return ResponseEntity.ok("Monthly summary email sent successfully");
     }
 }

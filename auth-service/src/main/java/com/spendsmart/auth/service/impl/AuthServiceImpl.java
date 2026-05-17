@@ -8,10 +8,24 @@ import com.spendsmart.auth.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
+import java.util.HashMap;
+import java.util.Map;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.transaction.annotation.Transactional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
+
+    @Value("${services.analytics-service.url}")
+    private String analyticsServiceUrl;
+
+    @Autowired
+    private RestTemplate restTemplate;
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
@@ -51,7 +65,8 @@ public class AuthServiceImpl implements AuthService {
                 user.getUserId(),
                 user.getFullName(),
                 user.getEmail(),
-                user.getCurrency()
+                user.getCurrency(),
+                user.getRole()
         );
     }
 
@@ -59,6 +74,12 @@ public class AuthServiceImpl implements AuthService {
     public void logout(String token) {
         // Client side removes token
         // Redis blacklist can be added later
+    }
+
+    @Override
+    @Transactional
+    public void deleteUser(int userId) {
+        userRepository.deleteByUserId(userId);
     }
 
     @Override
@@ -128,5 +149,21 @@ public class AuthServiceImpl implements AuthService {
         User user = getUserById(userId);
         user.setActive(false);
         userRepository.save(user);
+    }
+
+    private void registerUserInAnalytics(int userId, String email) {
+        try {
+            Map<String, Object> payload = new HashMap<>();
+            payload.put("userId", userId);
+            payload.put("email", email);
+            restTemplate.postForObject(
+                    analyticsServiceUrl + "/analytics/users/register",
+                    payload,
+                    String.class
+            );
+        } catch (Exception e) {
+            // Fire-and-forget — never fail registration because of this
+            log.warn("Could not register userId={} in analytics: {}", userId, e.getMessage());
+        }
     }
 }

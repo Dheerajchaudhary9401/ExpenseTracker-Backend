@@ -50,6 +50,9 @@ public class User {
     @Column(name = "monthly_budget")
     private double monthlyBudget = 0.0;
 
+    @Column(name = "role", nullable = false)
+    private String role = "USER";
+
     @PrePersist
     protected void onCreate() {
         this.createdAt = LocalDateTime.now();
